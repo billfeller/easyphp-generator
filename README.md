@@ -8,7 +8,9 @@ Use the application generator tool, easyphp-generator, to quickly create an appl
 
 Install easyphp-generator with the following command:
 
+```bash
 $ npm install easyphp-generator -g
+```
 
 Display the command options with the -h option:
 
