@@ -27,7 +27,7 @@ $ easyphp -h
     -h, --help     output usage information
     -V, --version  output the version number
     -f, --force    force on non-empty directory
-```bash
+```
 
 For example, the following creates an easyphp app named myapp in the current working directory:
 
@@ -76,7 +76,7 @@ $ easyphp myapp
 
    run the app:
      > SET DEBUG=myapp:* & npm start
-```bash
+```
 
 The generated app has the following directory structure:
 
@@ -124,7 +124,7 @@ The generated app has the following directory structure:
             └── Utils.php
 
 22 directories, 18 files
-```bash
+```
 
 ## License
 
