@@ -79,7 +79,7 @@ function createApplication(app_name, path) {
 
     console.log();
     console.log('   install dependencies:');
-    console.log('     %s cd %s && npm install', prompt, path);
+    console.log('     %s cd %s/trunk && npm install', prompt, path);
     console.log();
     console.log('   run the app:');
 
