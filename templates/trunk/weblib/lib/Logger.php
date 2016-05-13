@@ -303,7 +303,7 @@ class Logger
      */
      private static function _getLogPath(){
         $today = date('Ymd');
-        $path = '/tmp/jr.qq.com/'.$today.'/';
+        $path = '/tmp/' . APP_NAME . '/'.$today.'/';
         return $path ;
      }
 

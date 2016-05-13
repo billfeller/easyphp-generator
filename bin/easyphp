@@ -105,6 +105,8 @@ function createApplication(app_name, path) {
   var templatePhp = loadTemplate('trunk/weblib/lib/Template.php');
   var utilsPhp = loadTemplate('trunk/weblib/lib/Utils.php');
 
+  configPhp = configPhp.replace('{APP_NAME}', app_name);
+
   // JS
   var ZeptoJs = loadTemplate('trunk/static/js/zepto.min.js');
 

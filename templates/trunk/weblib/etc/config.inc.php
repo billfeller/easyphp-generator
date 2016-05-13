@@ -1,10 +1,12 @@
 <?php
 // vim: set expandtab cindent tabstop=4 shiftwidth=4 fdm=marker:
 
+define('APP_NAME', '{APP_NAME}');
+
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 ini_set('error_reporting', E_ALL & ~E_NOTICE);
-ini_set('error_log', '/tmp/jr.qq.com.error.log');
+ini_set('error_log', '/tmp/' . APP_NAME . '.error.log');
 ini_set('date.timezone', 'Asia/Shanghai');
 
 //定义各目录绝对路径
