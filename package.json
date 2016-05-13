@@ -1,0 +1,40 @@
+{
+  "private": true,
+  "author": {
+    "email": "wadezhan@tencent.com",
+    "name": "wadezhan"
+  },
+  "bin": {
+    "easyphp": "./bin/easyphp"
+  },
+  "dependencies": {
+    "commander": "2.7.1",
+    "mkdirp": "0.5.1",
+    "sorted-object": "1.0.0"
+  },
+  "description": "easyphp' application generator",
+  "devDependencies": {
+    "rimraf": "~2.2.8"
+  },
+  "directories": {},
+  "engines": {
+    "node": ">= 0.10"
+  },
+  "files": [
+    "LICENSE",
+    "bin/",
+    "templates/"
+  ],
+  "homepage": "https://github.com/billfeller/easyphp-generator",
+  "license": "MIT",
+  "main": "bin/easyphp",
+  "name": "easyphp-generator",
+  "optionalDependencies": {},
+  "preferGlobal": true,
+  "readme": "easyphp' application generator",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/billfeller/easyphp-generator.git"
+  },
+  "version": "1.0.0"
+}

@@ -1,0 +1,328 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var mkdirp = require('mkdirp');
+var os = require('os');
+var fs = require('fs');
+var path = require('path');
+var readline = require('readline');
+var sortedObject = require('sorted-object');
+
+var _exit = process.exit;
+var eol = os.EOL;
+var pkg = require('../package.json');
+
+var version = pkg.version;
+
+// Re-assign process.exit because of commander
+// TODO: Switch to a different command framework
+process.exit = exit
+
+// CLI
+
+before(program, 'outputHelp', function () {
+  this.allowUnknownOption();
+});
+
+program
+  .version(version)
+  .usage('[options] [dir]')
+  .option('-f, --force', 'force on non-empty directory')
+  .parse(process.argv);
+
+if (!exit.exited) {
+  main();
+}
+
+/**
+ * Install a before function; AOP.
+ */
+
+function before(obj, method, fn) {
+  var old = obj[method];
+
+  obj[method] = function () {
+    fn.call(this);
+    old.apply(this, arguments);
+  };
+}
+
+/**
+ * Prompt for confirmation on STDOUT/STDIN
+ */
+
+function confirm(msg, callback) {
+  var rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  rl.question(msg, function (input) {
+    rl.close();
+    callback(/^y|yes|ok|true$/i.test(input));
+  });
+}
+
+/**
+ * Create application at the given directory `path`.
+ *
+ * @param {String} path
+ */
+
+function createApplication(app_name, path) {
+  var wait = 10;
+
+  console.log();
+  function complete() {
+    if (--wait) return;
+    var prompt = launchedFromCmd() ? '>' : '$';
+
+    console.log();
+    console.log('   install dependencies:');
+    console.log('     %s cd %s && npm install', prompt, path);
+    console.log();
+    console.log('   run the app:');
+
+    if (launchedFromCmd()) {
+      console.log('     %s SET DEBUG=%s:* & npm start', prompt, app_name);
+    } else {
+      console.log('     %s DEBUG=%s:* npm start', prompt, app_name);
+    }
+
+    console.log();
+  }
+
+  // PHP
+  var indexPhp = loadTemplate('trunk/htdocs/index.php');
+  var jsonPhp = loadTemplate('trunk/htdocs/json.php');
+  var modPhp = loadTemplate('trunk/module/mod.php');
+  var configPhp = loadTemplate('trunk/weblib/etc/config.inc.php');
+  var envPhp = loadTemplate('trunk/weblib/lib/Env.php');
+  var fileCachePhp = loadTemplate('trunk/weblib/lib/FileCache.php');
+  var loadClassPhp = loadTemplate('trunk/weblib/lib/loadClass.php');
+  var loggerPhp = loadTemplate('trunk/weblib/lib/Logger.php');
+  var mysqlPhp = loadTemplate('trunk/weblib/lib/Mysql.php');
+  var templatePhp = loadTemplate('trunk/weblib/lib/Template.php');
+  var utilsPhp = loadTemplate('trunk/weblib/lib/Utils.php');
+
+  // JS
+  var ZeptoJs = loadTemplate('trunk/static/js/zepto.min.js');
+
+  // CSS
+  var styleCss = loadTemplate('trunk/static/css/style.css');
+
+  // HTML
+  var indexHtml = loadTemplate('trunk/static/html/index/index.html');
+
+  // PHPTPL
+  var indexTpl = loadTemplate('trunk/static/tpl/index/index.html');
+
+  // Gulpfile.js
+  var gulpfile = loadTemplate('trunk/gulpfile.js');
+
+  mkdir(path, function(){
+    mkdir(path + '/branches');
+    mkdir(path + '/document');
+    mkdir(path + '/release');
+    mkdir(path + '/tags');
+    mkdir(path + '/trunk', function() {
+      write(path + '/trunk/gulpfile.js', gulpfile);
+      complete();
+    });
+    mkdir(path + '/trunk/htdocs', function() {
+      write(path + '/trunk/htdocs/index.php', indexPhp);
+      write(path + '/trunk/htdocs/json.php', jsonPhp);
+      complete();
+    });
+    mkdir(path + '/trunk/module', function() {
+      write(path + '/trunk/module/mod.php', modPhp);
+      complete();
+    });
+    mkdir(path + '/trunk/static/css', function() {
+      write(path + '/trunk/static/css/style.css', styleCss);
+      complete();
+    });
+    mkdir(path + '/trunk/static/js', function() {
+      write(path + '/trunk/static/js/zepto.min.js', ZeptoJs);
+      complete();
+    });
+    mkdir(path + '/trunk/static/img');
+    mkdir(path + '/trunk/static/html/index', function() {
+      write(path + '/trunk/static/html/index/index.html', indexHtml);
+      complete();
+    });
+    mkdir(path + '/trunk/static/tpl/index', function() {
+      write(path + '/trunk/static/tpl/index/index.html', indexTpl);
+      complete();
+    });
+    mkdir(path + '/trunk/tpl');
+    mkdir(path + '/trunk/tpl_src');
+    mkdir(path + '/trunk/weblib/api');
+    mkdir(path + '/trunk/weblib/etc', function() {
+      write(path + '/trunk/weblib/etc/config.inc.php', configPhp);
+      complete();
+    });
+    mkdir(path + '/trunk/weblib/interface');
+    mkdir(path + '/trunk/weblib/lib', function() {
+      write(path + '/trunk/weblib/lib/Env.php', envPhp);
+      write(path + '/trunk/weblib/lib/FileCache.php', fileCachePhp);
+      write(path + '/trunk/weblib/lib/loadClass.php', loadClassPhp);
+      write(path + '/trunk/weblib/lib/Logger.php', loggerPhp);
+      write(path + '/trunk/weblib/lib/Mysql.php', mysqlPhp);
+      write(path + '/trunk/weblib/lib/Template.php', templatePhp);
+      write(path + '/trunk/weblib/lib/Utils.php', utilsPhp);
+      complete();
+    });
+
+    // package.json
+    var pkg = {
+      "name": app_name,
+      "version": '0.0.0',
+      "description": app_name,
+      "private": true,
+      "scripts": {
+        "build": "gulp"
+      },
+      "devDependencies": {
+        "gulp": "^3.9.1",
+        "gulp-htmlmin": "^1.3.0",
+        "gulp-image-optimization": "^0.1.3",
+        "gulp-minify-css": "^1.2.4",
+        "gulp-replace": "^0.5.4",
+        "gulp-rev": "^7.0.0",
+        "gulp-rev-collector": "^1.0.3",
+        "gulp-rimraf": "^0.2.0",
+        "gulp-uglify": "^1.5.3",
+        "gulp-util": "^3.0.7"
+      }
+    }
+
+    // write files
+    write(path + '/trunk/package.json', JSON.stringify(pkg, null, 4));
+    complete();
+  });
+}
+
+function copy_template(from, to) {
+  from = path.join(__dirname, '..', 'templates', from);
+  write(to, fs.readFileSync(from, 'utf-8'));
+}
+
+/**
+ * Check if the given directory `path` is empty.
+ *
+ * @param {String} path
+ * @param {Function} fn
+ */
+
+function emptyDirectory(path, fn) {
+  fs.readdir(path, function(err, files){
+    if (err && 'ENOENT' != err.code) throw err;
+    fn(!files || !files.length);
+  });
+}
+
+/**
+ * Graceful exit for async STDIO
+ */
+
+function exit(code) {
+  // flush output for Node.js Windows pipe bug
+  // https://github.com/joyent/node/issues/6247 is just one bug example
+  // https://github.com/visionmedia/mocha/issues/333 has a good discussion
+  function done() {
+    if (!(draining--)) _exit(code);
+  }
+
+  var draining = 0;
+  var streams = [process.stdout, process.stderr];
+
+  exit.exited = true;
+
+  streams.forEach(function(stream){
+    // submit empty write request and wait for completion
+    draining += 1;
+    stream.write('', done);
+  });
+
+  done();
+}
+
+/**
+ * Determine if launched from cmd.exe
+ */
+
+function launchedFromCmd() {
+  return process.platform === 'win32'
+    && process.env._ === undefined;
+}
+
+/**
+ * Load template file.
+ */
+
+function loadTemplate(name) {
+  return fs.readFileSync(path.join(__dirname, '..', 'templates', name), 'utf-8');
+}
+
+/**
+ * Main program.
+ */
+
+function main() {
+  // Path
+  var destinationPath = program.args.shift() || '.';
+
+  // App name
+  var appName = path.basename(path.resolve(destinationPath));
+
+  // Template engine
+  // program.template = 'jade';
+  // if (program.ejs) program.template = 'ejs';
+  // if (program.hogan) program.template = 'hjs';
+  // if (program.hbs) program.template = 'hbs';
+
+  // Generate application
+  emptyDirectory(destinationPath, function (empty) {
+    if (empty || program.force) {
+      createApplication(appName, destinationPath);
+    } else {
+      confirm('destination is not empty, continue? [y/N] ', function (ok) {
+        if (ok) {
+          process.stdin.destroy();
+          createApplication(appName, destinationPath);
+        } else {
+          console.error('aborting');
+          exit(1);
+        }
+      });
+    }
+  });
+}
+
+/**
+ * echo str > path.
+ *
+ * @param {String} path
+ * @param {String} str
+ */
+
+function write(path, str, mode) {
+  fs.writeFileSync(path, str, { mode: mode || 0666 });
+  console.log('   \x1b[36mcreate\x1b[0m : ' + path);
+}
+
+/**
+ * Mkdir -p.
+ *
+ * @param {String} path
+ * @param {Function} fn
+ */
+
+function mkdir(path, fn) {
+  mkdirp(path, 0755, function(err){
+    if (err) throw err;
+    console.log('   \033[36mcreate\033[0m : ' + path);
+    fn && fn();
+  });
+}
