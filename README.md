@@ -130,6 +130,8 @@ The generated app has the following directory structure:
 
 [MIT](LICENSE)
 
+[travis-image]: https://img.shields.io/travis/expressjs/generator/master.svg?label=linux
+[travis-url]: https://travis-ci.org/expressjs/generator
 [npm-url]: https://npmjs.org/package/easyphp-generator
 [downloads-url]: https://npmjs.org/package/easyphp-generator
 [gratipay-image]: https://img.shields.io/gratipay/dougwilson.svg
