@@ -4,6 +4,7 @@
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Linux Build][travis-image]][travis-url]
 [![Windows Build][appveyor-image]][appveyor-url]
+[![Gratipay][gratipay-image]][gratipay-url]
 
 ## Quick Start
 
@@ -131,3 +132,5 @@ The generated app has the following directory structure:
 
 [npm-url]: https://npmjs.org/package/easyphp-generator
 [downloads-url]: https://npmjs.org/package/easyphp-generator
+[gratipay-image]: https://img.shields.io/gratipay/dougwilson.svg
+[gratipay-url]: https://gratipay.com/dougwilson/
