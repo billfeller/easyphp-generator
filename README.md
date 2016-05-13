@@ -4,7 +4,6 @@
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Linux Build][travis-image]][travis-url]
 [![Windows Build][appveyor-image]][appveyor-url]
-[![Gratipay][gratipay-image]][gratipay-url]
 
 ## Quick Start
 
@@ -17,6 +16,7 @@ Install easyphp-generator with the following command:
 $ npm install easyphp-generator -g
 Display the command options with the -h option:
 
+```bash
 $ easyphp -h
 
   Usage: easyphp [options] [dir]
@@ -26,9 +26,11 @@ $ easyphp -h
     -h, --help     output usage information
     -V, --version  output the version number
     -f, --force    force on non-empty directory
+```bash
 
 For example, the following creates an easyphp app named myapp in the current working directory:
 
+```bash
 $ easyphp myapp
 
    create : myapp
@@ -73,9 +75,11 @@ $ easyphp myapp
 
    run the app:
      > SET DEBUG=myapp:* & npm start
+```bash
 
 The generated app has the following directory structure:
 
+```bash
 .
 ├── branches
 ├── document
@@ -119,31 +123,11 @@ The generated app has the following directory structure:
             └── Utils.php
 
 22 directories, 18 files
-
-## Command Line Options
-
-This generator can also be further configured with the following command line flags.
-
-    -h, --help          output usage information
-    -V, --version       output the version number
-    -e, --ejs           add ejs engine support (defaults to jade)
-        --hbs           add handlebars engine support
-    -H, --hogan         add hogan.js engine support
-    -c, --css <engine>  add stylesheet <engine> support (less|stylus|compass|sass) (defaults to plain css)
-        --git           add .gitignore
-    -f, --force         force on non-empty directory
+```bash
 
 ## License
 
 [MIT](LICENSE)
 
-[npm-image]: https://img.shields.io/npm/v/express-generator.svg
-[npm-url]: https://npmjs.org/package/express-generator
-[travis-image]: https://img.shields.io/travis/expressjs/generator/master.svg?label=linux
-[travis-url]: https://travis-ci.org/expressjs/generator
-[appveyor-image]: https://img.shields.io/appveyor/ci/dougwilson/generator/master.svg?label=windows
-[appveyor-url]: https://ci.appveyor.com/project/dougwilson/generator
-[downloads-image]: https://img.shields.io/npm/dm/express-generator.svg
-[downloads-url]: https://npmjs.org/package/express-generator
-[gratipay-image]: https://img.shields.io/gratipay/dougwilson.svg
-[gratipay-url]: https://gratipay.com/dougwilson/
+[npm-url]: https://npmjs.org/package/easyphp-generator
+[downloads-url]: https://npmjs.org/package/easyphp-generator
